@@ -37,12 +37,51 @@ Some of the key features of the architecture are Configurable data streams, Chuc
    Once we have definition of events and the target contexts that we need to populate, we can then define the various transformations, joins and calculations to be persisted, and also use context as the common entity which allows users to configure relationships between multiple event streams. Mapping is defined as a stream-centric relationship between one event stream and multiple contexts
    
 ## Features
-- Computed Fields
+
+#### Computed Fields
+   Additional fields to be persisted/enriched in the context. <br>
+   Example:
+   ```
+   {
+      "stateName": "masked_password",
+      "conditions": "var str = $.payload.password; (str != null) ? (str.substr(0,3)) + '****'  : '';"
+   }
+   ```
    
-- Persisted Fields
-- Revised Fields
-- External Lookup
-- Traps & Actions
-- Enrichment Completion
+#### Persisted Fields
+   Fields from Event Stream to be persisted/enriched in the context. <br>
+   Example:
+   ```
+   {
+       "streamFieldName": "$.payload.user.emailAddress",
+       "contextFieldName": "EmailID"
+   }
+   ```
+   
+#### Revised Fields
+   Field values to be edited inline in the Event Stream. <br> 
+   Example:
+   ```
+   
+   ```
+   
+#### External Lookup
+   Series of external URL's to be invoked to retrieve additional data and enrich the stream. <br>
+   Example:
+   ```
+   "externalLookUp": {
+            "urlTag": [{
+                "url": "https://HOST:PORT/service_context/:1",
+                "methodType": "get",
+                "contentTypeHeader": "application/x-www-form-urlencoded",
+                "tag": "$.data.accounts",
+                "queryParam": "$.data.AccountId"
+            }]
+        }
+   ```
+   
+   
+#### Traps & Actions
+#### Enrichment Completion
 
 ## Configuration
