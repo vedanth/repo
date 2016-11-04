@@ -120,7 +120,136 @@ Some of the key features of the architecture are Configurable data streams, Chuc
    
 ## Dynamic Configuration - REST API's
 
+#### Create Event Stream 
+  Sample Payload:
+  > POST http://localhost:9090/eventstream
+  
+  ```
+  {
+    "eventStreamName": "CreateUserStream",
+    "identifier": [{
+        "field": "$.data.emailAddress"
+    }],
+    "filter": "$.data.emailAddress!=null"
+  }
+  ```
 
+#### Create Context 
+  Sample Payload:
+  > POST http://localhost:9090/context
+  
+  ```
+  {
+    "processContextName": "UserRegistrationContext"
+  }
+  ```
+
+#### Create Mapping
+  Sample Payload:
+  > POST http://localhost:9090/mapping
+  
+  ```
+  {
+    "stream": {
+        "eventStreamName": "CreateUserStream"
+    },
+    "contextMappings": [{
+        "context": {
+            "processContextName": "UserRegistrationContext"
+        },
+        "primaryStream": "true",
+        "joinConditions": "($.EmailID = $.data.emailAddress)",
+        "persistedFields": [{
+            "streamFieldName": "$.data.FirstName",
+            "contextFieldName": "FirstName"
+        }],
+        "computedStates": [
+        {
+            "stateName": "UserStatus",
+            "conditions": "($.data.userStatus>==1) ? 'Active' : 'Inactive'"
+        }]
+    }]
+  }
+  ```
+  
+#### Create Trap & Action
+  Sample Payload:
+  > POST http://localhost:9090/trapaction
+  
+  ```
+    {
+    "condition": "$.PasswordResetAttempt == '3'",
+    "pluginType": "ip",
+    "pluginPoint": "passsword_rest_stream",
+    "actions": [{
+        "actionType": "email",
+        "configuration": [{
+            "key": "subject",
+            "value": "Password Reset Failure for user $.data.user"
+        },
+        {
+            "key": "mail_to",
+            "value": "abc@gmail.com"
+        }]
+    },
+    {
+        "actionType": "ignore"
+    }]
+   } 
+  ```
+  
+#### Create Input/Output Connections 
+  Sample Payload:
+  > POST http://localhost:9090/configurationDetails
+  
+  ```
+{
+    "configurationName": "MyRMQConnection",
+    "configurationType": "rmq",
+    "configurationFlow": "Input",
+    "configurationProperties": [{
+        "configurationKey": "RabbitHost",
+        "configurationValue": "localhost"
+    },
+    {
+        "configurationKey": "RabbitQueName",
+        "configurationValue": "q.test"
+    },
+    {
+        "configurationKey": "RabbitUsername",
+        "configurationValue": "guest"
+    },
+    {
+        "configurationKey": "RabbitPassword",
+        "configurationValue": "guest"
+    },
+    {
+        "configurationKey": "RabbitVHost",
+        "configurationValue": "/"
+    },
+    {
+        "configurationKey": "RabbitPort",
+        "configurationValue": "5672"
+    }]
+  }
+  ```
+
+#### Start Input
+  Sample Payload:
+  > POST http://localhost:9090/startinput
+  
+  ```
+   MyRMQConnection
+  ```
+
+#### Start Output
+  Sample Payload:
+  > POST http://localhost:9090/startoutput
+  
+  ```
+   MyKafkaConnection
+  ```
+  
 ## Installation
 
 ## Running DIM
