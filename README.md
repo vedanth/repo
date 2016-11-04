@@ -9,7 +9,7 @@ Some of the key features of the architecture are Configurable data streams, Chuc
 
 ## Supported Pluggable Input Sources
 - RabbitMQ 
-- Kafka 
+- Kafka
 - Salesforce SOQL
 - Salesfore Streaming Topic 
 - TCP Socket
@@ -24,10 +24,18 @@ Some of the key features of the architecture are Configurable data streams, Chuc
 - TCP Socket
 
 ## Logical Entities
-- Event Stream
-- Contexts
-- Mappings 
+#### Event Stream
+  An event stream is logical representation of real-time collection of data, which are identified based on user defined filter expressions, and represent a "Type" of data. For example, an application generates data related to user creation event, and emits payloads of user related information, which is identified by a certain data tag in the payload, it can be identified as an event stream of User Creation.
+   
+#### Contexts
+   Context is a user defined combination of event data, which provides a unified business process view of event data by accumulating, transforming and processing event streams. Each context is a logical representation of a type of business process, and stores three major types of data:
+ -	Data fields from event streams
+ - Transformed and calculated fields derived from event stream data
+ - Identifiers
 
+#### Mappings 
+   Once we have definition of events and the target contexts that we need to populate, we can then define the various transformations, joins and calculations to be persisted, and also use context as the common entity which allows users to configure relationships between multiple event streams. Mapping is defined as a stream-centric relationship between one event stream and multiple contexts
+   
 ## Features
 - Computed Fields
    
