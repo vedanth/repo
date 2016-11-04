@@ -62,7 +62,10 @@ Some of the key features of the architecture are Configurable data streams, Chuc
    Field values to be edited inline in the Event Stream. <br> 
    Example:
    ```
-   
+   {
+       "fieldName": "$.data.Name",
+       "expression": "var a='$.data.Name'; a.substring(0,5)"
+   }
    ```
    
 #### External Lookup
@@ -70,18 +73,55 @@ Some of the key features of the architecture are Configurable data streams, Chuc
    Example:
    ```
    "externalLookUp": {
-            "urlTag": [{
-                "url": "https://HOST:PORT/service_context/:1",
-                "methodType": "get",
-                "contentTypeHeader": "application/x-www-form-urlencoded",
-                "tag": "$.data.accounts",
-                "queryParam": "$.data.AccountId"
-            }]
-        }
+      "urlTag": [{
+          "url": "https://HOST:PORT/service_context/:1",
+          "methodType": "get",
+          "contentTypeHeader": "application/x-www-form-urlencoded",
+          "tag": "$.data.accounts",
+          "queryParam": "$.data.AccountId"
+      }]
+   }
    ```
    
-   
 #### Traps & Actions
+   Traps an incomming Event Stream and checks if the event has matches the defined Trap condition. Once the Trap condition is satisfied, the actions defined for the trap is fired. <br>
+   Example:
+   ```
+   {
+    "condition": "$.PasswordResetAttempt == '3'",
+    "pluginType": "ip",
+    "pluginPoint": "passsword_rest_stream",
+    "actions": [{
+        "actionType": "email",
+        "configuration": [{
+            "key": "subject",
+            "value": "Password Reset Failure for user $.data.user"
+        },
+        {
+            "key": "mail_to",
+            "value": "abc@gmail.com"
+        }]
+    },
+    {
+        "actionType": "ignore"
+    }]
+  }  
+   ```
+   
 #### Enrichment Completion
+   Enrichment Completion ensures the Context to be persited onto the targets only when all the dependent Event Streams join the Context. <br>
+   Example:
+   ```
+   {
+     "processContextName": "UserRegistrationContext",
+     "enrichmentCompletion": "$.UserName=='idmadmin'"
+   }
+   ```
+   
+## Dynamic Configuration - REST API's
 
-## Configuration
+
+## Installation
+
+## Running DIM
+
