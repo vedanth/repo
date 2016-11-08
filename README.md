@@ -253,4 +253,3 @@ Some of the key features of the architecture are Configurable data streams, Chuc
 ## Installation
 
 ## Running DIM
-
